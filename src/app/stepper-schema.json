@@ -1,0 +1,238 @@
+{
+  "$schema": "http://json-schema.org/draft-04/hyper-schema#",
+  "type": "object",
+  "definitions": {
+    "addressBlock": {
+      "type": "object",
+      "properties": {
+        "address": {
+            "type": "string",
+            "title": "Address",
+            "widget": {
+                "id": "string",
+                "htmlClass": "col-12"
+            },
+            "templateMetaData": {
+                "isVisible": true,
+                "isVisibleModifiable": true,
+                "isRequired": true,
+                "isRequiredModifiable": true,
+                "description": "",
+                "isDefaultModifiable": true
+            }
+        },
+        "suburb": {
+            "type": "string",
+            "title": "Suburb",
+            "widget": "string",
+            "templateMetaData": {
+                "isVisible": true,
+                "isVisibleModifiable": true,
+                "isRequired": true,
+                "isRequiredModifiable": true,
+                "description": "",
+                "isDefaultModifiable": true
+            }
+        },
+        "state": {
+            "type": "boolean",
+            "title": "State",
+            "widget": "select",
+            "templateMetaData": {
+                "isVisible": true,
+                "isVisibleModifiable": true,
+                "isRequired": true,
+                "isRequiredModifiable": true,
+                "description": "",
+                "isDefaultModifiable": true
+            }
+        },
+        "postcode": {
+            "type": "string",
+            "title": "Postcode",
+            "widget": "string",
+            "templateMetaData": {
+                "isVisible": true,
+                "isVisibleModifiable": true,
+                "isRequired": true,
+                "isRequiredModifiable": true,
+                "description": "",
+                "isDefaultModifiable": true
+            }
+        }
+      },
+      "fieldsets": [
+        {
+          "fields": [
+              "address",
+              "suburb",
+              "state",
+              "postcode"
+          ]
+        }
+      ]
+    }
+  },
+  "properties": {
+    "contactRelationships": {
+      "type": "array",
+      "title": "Contact Relationships",
+      "minItems": 1,
+      "maxItems": 7,
+      "widget": {
+        "panelDescription": ["firstName", "lastName"],
+        "id": "array"
+      },
+      "default": [{
+        "firstName": ""
+      }],
+      "items": {
+        "title": "Contact Relationship",
+        "widget": {
+          "id": "object"
+        },
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "title": "First Name",
+            "widget": {
+              "id": "string"
+            }
+          },
+          "lastName": {
+            "type": "string",
+            "title": "Last Name",
+            "widget": {
+              "id": "string"
+            }
+          },
+          "contactType": {
+            "type": "number",
+            "title": "Contact Type",
+            "oneOf": [
+              {
+                "description": "Option1",
+                "enum": [1]
+              },
+              {
+                "description": "Option2",
+                "enum": [2]
+              }
+            ],
+            "widget": "select"
+          },
+          "country": {
+            "type": "number",
+            "title": "Country",
+            "visibleIf": {
+              "contactType": 1
+            },
+            "oneOf": [
+              {
+                "visibleIf": {
+                  "contactType": 2
+                },
+                "description": "Option1",
+                "enum": [1]
+              },
+              {
+                "description": "Option2",
+                "enum": [2]
+              },
+              {
+                "description": "Option3",
+                "enum": [3]
+              }
+            ],
+            "widget": "select"
+          },
+          "billing_address": { "$ref": "#/definitions/addressBlock" },
+          "shipping_address": { "$ref": "#/definitions/addressBlock" },
+          "postalAddress": {
+            "type": "object",
+            "title": "Postal Address",
+            "widget": {
+                "htmlClass": "col-12",
+                "id": "object"
+            },
+            "properties": {
+              "address": { "$ref": "#/definitions/addressBlock" }
+            },
+            "fieldsets": [
+                {
+                    "title": "Postal address",
+                    "description": "Postal address description",
+                    "fields": [
+                        "address"
+                    ]
+                }
+            ]
+          }
+        },
+        "fieldsets": [
+          {
+            "title": "",
+            "description": "",
+            "fields": [
+              "firstName",
+              "lastName",
+              "contactType",
+              "country",
+              "billing_address",
+              "shipping_address",
+              "postalAddress"
+            ]
+          }
+        ],
+        "required": [
+          "firstName", "lastName"
+        ]
+      }
+    },
+    "isSingleParent": {
+        "type": "boolean",
+        "description": "I confirm that no additional parents or guardians will be added",
+        "widget": {
+            "htmlClass": "col-12 mt-3",
+            "id": "boolean"
+        },
+        "visibleIf": {
+            "oneOf": [
+              {
+                "contactRelationships": [
+                  "$EXP$ !target.value[1].firstName"
+                ]
+              },
+              {
+                "contactRelationships": [
+                  "$EXP$ !target.value[1].lastName"
+                ]
+              }
+            ]
+        },
+        "templateMetaData": {
+            "isVisible": true,
+            "isVisibleModifiable": true,
+            "isRequired": true,
+            "isRequiredModifiable": true,
+            "description": "",
+            "isDefaultModifiable": true
+        }
+    }
+  },
+  "fieldsets": [
+    {
+      "title": "Parent/Guardian",
+      "description": "This is a demo of the Parent Guardian Tab in the application form",
+      "fields": [
+        "contactRelationships",
+        "isSingleParent"
+      ]
+    }
+  ],
+  "required": ["contactRelationships"],
+  "widget": {
+    "id": "object"
+  }
+}

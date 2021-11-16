@@ -1,0 +1,13 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+	<mat-step *ngFor="let fieldset of formProperty.schema.fieldsets">
+		<ng-template matStepLabel *ngIf="fieldset.title">{{fieldset.title}}</ng-template>
+		<div *ngIf="fieldset.description">{{fieldset.description}}</div>
+		<div *ngFor="let fieldId of fieldset.fields">
+			<sf-form-element [formProperty]="formProperty.getProperty(fieldId)"></sf-form-element>
+		</div>
+		<div>
+			<button mat-button matStepperPrevious>Back</button>
+			<button mat-button matStepperNext>Next</button>
+		</div>
+	</mat-step>
+</mat-horizontal-stepper>

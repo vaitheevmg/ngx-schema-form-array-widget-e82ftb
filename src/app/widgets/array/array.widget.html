@@ -1,0 +1,77 @@
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title>
+      <label
+        [attr.for]="id"
+        class="horizontal control-label"
+        [ngClass]="{'required': schema.isRequired}"
+      >
+        {{ schema.title }}
+      </label>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <span *ngIf="schema.description" class="formHelp"
+        >{{schema.description}}</span
+      >
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="row">
+      <div class="col-12">
+        <mat-accordion [multi]="true">
+          <mat-expansion-panel
+            *ngFor="let itemProperty of formProperty.properties; let i = index"
+            [expanded]="i === step"
+            (opened)="itemProperty.isOpen = true"
+            (closed)="itemProperty.isOpen = false"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ itemProperty.schema.title }}
+                <!-- {{i + 1}} -->
+              </mat-panel-title>
+              <mat-panel-description
+                *ngIf="schema.widget.panelDescription && !itemProperty.isOpen"
+              >
+                <span
+                  *ngFor="let field of schema.widget.panelDescription"
+                  class="mr-1"
+                >
+                  {{ itemProperty.value[field] }}
+                </span>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <sf-form-element [formProperty]="itemProperty"></sf-form-element>
+
+            <mat-action-row *ngIf="i >= (schema.minItems||0)">
+              <button
+                mat-stroked-button
+                color="warn"
+                class="array-remove-button"
+                (click)="removeItem(itemProperty)"
+                [disabled]="isRemoveButtonDisabled()"
+                *ngIf="!(schema.hasOwnProperty('minItems') && schema.hasOwnProperty('maxItems') && schema.minItems === schema.maxItems)"
+              >
+                <mat-icon>clear</mat-icon>Remove
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions class="text-right p-2">
+    <button
+      mat-stroked-button
+      color="primary"
+      class="array-add-button"
+      (click)="addItem()"
+      [disabled]="isAddButtonDisabled()"
+      *ngIf="!(schema.hasOwnProperty('minItems') && schema.hasOwnProperty('maxItems') && schema.minItems === schema.maxItems)"
+    >
+      <mat-icon>add</mat-icon>Add
+    </button>
+  </mat-card-actions>
+</mat-card>
